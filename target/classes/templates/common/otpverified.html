@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register page</title>
+
+</head>
+
+<body>
+
+    <section>
+        <div class="container p-3">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="my-card mt-5 rounded otplayout text-dark">
+
+                        
+                        <div class="otptitle text-center fw-bold" style="font-size: 30px;">VERIFIED</div>
+                        <div class="text-center">
+                            <img style="height: 200px; width: 200px;" src="/default/path/to/image.png" th:src="@{/img/otpver.png}" alt="otpimage" class="img-fluid">
+                        </div>
+                        
+                        <div class="title fw-bold text-center" style="font-size: 30px;">Proceed to <span style="color: rgb(255, 145, 0); font-weight: 700;"><a th:href="@{/signin} " style="text-decoration: none; color: rgb(255, 145, 0);">login</a></span></div>
+                        
+                        
+                        <div th:if="${session.message}" th:classappend="${session.message.type}" class="alert"
+                        role="alert">
+                        <p class="text-center" th:text="${session.message.content}"></p>
+                    </div>
+                    <th:block th:text="${@sessionHelper.removemessagefromservice()}"></th:block>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <style>
+      
+    </style>
+</head>
+<body>
+    
+
+
+
+    <section class="vh-90 gradient-custom">
+        <div class="container-fluid" style="margin-top: 30px;">
+            <div class="container py-1 h-90">
+                <div class="row d-flex justify-content-center h-90">
+                  <div class="col-12 col-md-12 col-lg-11 col-xl-11">
+                    <div class="card bg-light text-dark" style="border-radius: 1rem;">
+                      <div class="card-body " style="padding-top: 0; padding-bottom: 0; padding-left: 24px; padding-right: 24px;">
+                        <div class="mb-md-4 mt-md-4">
+                            <h2>Shipping Address</h2>
+
+                            <form id="checkout-form"  method="post" th:action="@{/user/orderall}">
+                                <div class="col-lg-12 form-group my-2">
+                                    <label for="address" class="form-label" style="font-weight: 500;">Select Address</label>
+                                    <select id="addressid" name="addressId" class="form-control" required aria-placeholder="select address">
+                                       
+                                        <option th:each="addresslst: ${addresslist}" th:value="${addresslst.id}" th:if="${addresslst.deleted==false}"
+                                            th:text="${addresslst.street + ', ' + addresslst.city + ', ' + addresslst.state}">
+                                        </option>
+                                    </select>
+                                    <div class="checkout-summary">
+                                        <h2 style="margin-top: 20px;">Cart Total</h2>
+                                        <div th:each="item:${cartItems}">
+                                            <p style="font-weight: 500;">ITEM :</p>
+                                            <p style="font-weight: 500;">Product Name : [[${item.product.pname}]]</p>
+                                            <p id="productprice" style="font-weight: 500;"
+                                                    th:value="${item.product.price}">Product Cost : ₹[[${item.product.price}]]</span></p>
+                                            <p style="font-weight: 500;" class="sub-total">Quantity : <span id="productquantity"
+                                                    th:value="${item.quantity}">[[${item.quantity}]]</span>
+                                            </p>
+                                            <!-- <p class="ship-cost">Shipping Cost<span>₹1</span></p> -->                                 
+                                        </div>
+                                        <p style="font-weight: 500;">Shipping Charges : ₹150</p>
+                                        <p style="font-weight: 500;">Total Price : ₹<span th:text="${boforeprice}"></span></p>
+
+
+                                        
+                                    </div>
+                                </div>
+                                <div class="checkout-summary" style="margin-top: 20px;">
+                                    <div class="coupon">
+                                        <input type="text" id="coupon_code" placeholder="Apply Coupon">
+                                        <button class="btn" style="background-color: rgb(255, 145, 0);  font-weight: 600; color: white;" type="button" id="coupon_button"
+                                            th:href="@{/user/applyCoupon}">Apply Code</button>
+                                    </div>
+                                    <div id="appliedCouponDiv" style="margin-top: 10px;">
+                                        <p style="font-weight: 500;">Applied Coupon: <span id="appliedCoupon"></span></p>
+                                        <input type="hidden" id="originalTotalPrice" value="${originalTotalPrice}" />
+                                        
+                                    </div>
+                                    <p id="coupon_message"></p>
+
+                                    
+                                    <a id="removeCouponBtn" class="btn" style="background-color: rgb(255, 145, 0);  font-weight: 600; color: white;">Remove Coupon</a>
+                                </div>
+                                
+                                <div class="checkout-payment" style="margin-top: 20px;">
+                                    <div class="payment-methods">
+                                        <h2>Payment Method</h2>
+                                        <div class="payment-method">
+                                            
+                                            <div class="payment-content" id="payment-77-show">
+                                                <p>
+                                                <h4 class="text-success">Total Payable : ₹<span id="grandtotal"  th:text="${totalprice}"></span>
+                                                </h4>
+                                                <!-- <button class="btn btn-primary" type="button"
+                                                    onclick="paymentStart()"> Pay now</button> -->
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="payment-method">
+                                            <div class="custom-control">
+                                                <input type="checkbox" name="useWallet" value="true"
+                                                    id="payment-7" class="custom-control-input">
+                                                <label class="custom-control-label" for="payment-7"> Wallet
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="payment-content" id="payment-7-show">
+
+                                                <h5 th:if="${wallets.currentBalance>=totalprice}">Wallet Balance : ₹<span
+                                                        id="walletBalance"
+                                                        th:value="${wallets.currentBalance}">[[${wallets.currentBalance}]]</span>
+
+                                                </h5>
+                                                <h5 th:if="${wallets.currentBalance<totalprice}"
+                                                    class="text-danger">insufficient balance :
+                                                    <span>[[${wallets.currentBalance}]]</span>
+                                                </h5>
+                                            </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="payment-method">
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" id="payment-2"
+                                                    name="payment" value="rayzorpay">
+                                                <label class="custom-control-label" for="payment-2">Razor
+                                                    Pay</label>
+
+                                            </div>
+                                            <div class="payment-content" id="payment-2-show">
+                                                <p>
+                                                <h2 style="display: none;">₹<span id="payment_amount" th:text="${totalprice}"></span>
+
+                                                </h2>
+                                                <button class="btn" style="background-color: rgb(255, 145, 0);  font-weight: 600; color: white;" type="button"
+                                                    onclick="paymentStart()"> Pay now</button>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="payment-method">
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" class="custom-control-input" id="payment-5"
+                                                    name="payment" th:value="cash" >
+                                                <label class="custom-control-label" style="font-weight: 500;" for="payment-5">Cash on
+                                                    Delivery</label>
+                                            </div>
+                                            <div class="payment-content" id="payment-5-show">
+                                                <p>
+
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <input id="hidaddressid" type="hidden" name="addressId"> -->
+                                   
+                                    <input type="hidden" id="hidgrandtotal" name="cartprice" th:value="${totalprice}">
+                                    <div class="checkout-btn">
+                                        <button type="submit" id="placeorderbtn" class="btn col-md-3 mb-3" style="background-color: rgb(255, 145, 0); margin-top: 10px; font-weight: 600; color: white;">Place Order</button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+       
+
+
+
+      
+
+            <script>
+                
+                $(document).ready(function () {
+                    $('#removeCouponBtn').hide();
+                    $('#appliedCouponDiv').hide();
+                    $('#coupon_button').click(function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '/user/applyCoupon',
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                name: $('#coupon_code').val(),
+                                totalprice: $('#hidgrandtotal').val()
+                            }),
+                            success: function (response) {
+                                // Update the HTML content and hidden input value
+                                $('#grandtotal').text(response);
+                                $('#hidgrandtotal').val(response);
+
+                                // Display the applied coupon dynamically
+                                $('#appliedCouponDiv').html('<p style="font-weight: 500;">Applied Coupon: ' + $('#coupon_code').val() + '</p>');
+
+                                // Show the "Remove Coupon" button
+                                $('#removeCouponBtn').show();
+                                $('#appliedCouponDiv').show();
+
+                                
+                                
+                                var beforePrice = [[${boforeprice}]] ; // Assuming ${beforeprice} is a variable available in your Thymeleaf context
+                                var difference = beforePrice - response;
+                                $('#coupon_message').html('<p style="color: green;">Coupon applied successfully. Amount discounted: ₹' + difference + '. New total amount: ₹' + response + '</p>');
+
+
+                                // Optional: Show a success message
+                                alert('Coupon applied successfully. New total amount: ₹' + response);
+                            },
+                            error: function (error) {
+                                console.log(error);
+                                alert(error.responseText);
+                            }
+                        });
+                    });
+
+                    $('#removeCouponBtn').click(function () {
+        // Make an AJAX request to remove the coupon
+        $.ajax({
+            type: "POST",
+            url: '/user/removeCoupon',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                name: $('#coupon_code').val(),
+                totalprice: $('#hidgrandtotal').val()
+            }),
+            success: function (response) {
+                // Update the HTML content and hidden input value
+                $('#appliedCouponDiv').html(''); // Clear the applied coupon display
+                $('#hidgrandtotal').val(response); // Use the response directly
+                $('#grandtotal').text(response);
+
+                // Clear the coupon input box
+                $('#coupon_code').val(''); // Add this line to clear the coupon input
+
+                // Hide the "Remove Coupon" button
+                $('#removeCouponBtn').hide();
+                $('#appliedCouponDiv').hide();
+
+                // Hide the message under the Apply Coupon input
+                $('#coupon_message').html('');
+
+                // Optional: Show a success message
+                alert('Coupon removed successfully. Original total amount: ₹' + response);
+            },
+            error: function (error) {
+                console.log(error);
+                alert(error.responseText);
+            }
+        });
+    });
+            });
+
+
+    
+                var totalprices = document.getElementById('grandtotal').textContent;
+                var checkbox = document.getElementById('payment-7');
+                var cashondeliveryButton = document.getElementById('payment-5');
+                var rayzorButton = document.getElementById('payment-2');
+                var walletAmount = [[${ wallets.currentBalance }]];
+
+                
+    
+                cashondeliveryButton.addEventListener('change',function(){
+                    if(this.checked){
+                        document.getElementById('placeorderbtn').style.display = 'block';
+                    }
+                })
+    
+                checkbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        cashondeliveryButton.disabled = true;
+                        cashondeliveryButton.checked = false;
+                        var absoluteDifference = Math.abs(totalprices - walletAmount);
+                        $('#payment_amount').text(absoluteDifference);
+                        rayzorButton.disabled = false;
+                        if (walletAmount > totalprices) {
+                            rayzorButton.disabled = true;
+                            rayzorButton.checked = false;
+                            document.getElementById('placeorderbtn').style.display = 'block';
+                        }
+                    }
+                    else {
+    
+                        cashondeliveryButton.disabled = false;
+                        rayzorButton.disabled = false;
+                    }
+                });
+                function uncheckWallet() {
+                    var walletCheckbox = document.getElementById('payment-7');
+                    $('#payment_amount').text(totalprices);
+                    walletCheckbox.checked = false;
+                }
+    
+                document.getElementById('payment-2').addEventListener('change', function () {
+                    if (this.checked) {
+                        document.getElementById('placeorderbtn').style.display = 'none';
+                       
+                    } else {
+                        document.getElementById('placeorderbtn').style.display = 'block';
+                       
+
+                        
+                    }
+                });
+    
+                // rayzor pay integration
+                let amount;
+                const paymentStart = () => {
+                    console.log("payment started");
+                    amount = $("#payment_amount").text();
+                    // Make AJAX request after getting the amount
+                    $.ajax({
+                        url: '/user/create_order',
+                        data: JSON.stringify({ amount: amount }),
+                        contentType: 'application/json',
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (response) {
+                            // Invoked when success 
+                            console.log(response);
+                            let options = {
+                                "key": "rzp_test_uaxhcNM7pjJmAt", // Enter the Key ID generated from the Dashboard
+                                "amount": response.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                                "currency": "INR",
+                                "name": "Shopxy", //your business name
+                                "description": "Test Transaction",
+                                "image": "https://rzp-1415-prod-dashboard-activation.s3.amazonaws.com/org_100000razorpay/main_logo/phpAJgHea",
+                                "order_id": response.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                                "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+                                handler: function (response) {
+                                    console.log(response.razorpay_payment_id);
+                                    console.log(response.razorpay_order_id);
+                                    console.log(response.razorpay_signature)
+    
+                                    $('#checkout-form').submit();
+                                },
+                                "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                                    "name": "", //your customer's name
+                                    "email": "",
+                                    "contact": "" //Provide the customer's phone number for better conversion rates 
+                                },
+                                "notes": {
+                                    "address": "Razorpay Corporate Office"
+                                },
+                                "theme": {
+                                    "color": "#3399cc"
+                                }
+                            };
+                            let rzp1 = new Razorpay(options);
+                            // document.getElementById('rzp-button1').onclick = function (e) {
+                            rzp1.on('payment.failed', function (response) {
+                                console.log(response.error.code);
+                                console.log(response.error.description);
+                                console.log(response.error.source);
+                                console.log(response.error.step);
+                                console.log(response.error.reason);
+                                console.log(response.error.metadata.order_id);
+                                console.log(response.error.metadata.payment_id);
+                                alert("oops payment failed")
+                            });
+                            rzp1.open();
+                            // Assuming your form has an ID like 'checkout-form', submit the form
+    
+    
+                        },
+                        error: function (error) {
+                            // Invoked when some error occurred
+                            console.log(JSON.stringify(error));
+                            console.log(error);
+                            console.log(error + " error occurred");
+                            alert("Payment failed. Please try again.");
+                        }
+                    });
+                };
+            </script>
+
+  </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.js"></script>
+</body>
+</html>

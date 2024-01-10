@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+    <section class="vh-100% gradient-custom">
+        <div class="container-fluid" style="margin-top: 30px;">
+            <div class="container py-1 h-90">
+                <div class="row d-flex justify-content-center h-90">
+                  <div class="col-12 col-md-12 col-lg-11 col-xl-11">
+                    <div class="card bg-light text-dark" style="border-radius: 1rem;">
+                      <div class="card-body p-4">
+                        <div class="mb-md-4 mt-md-4">
+
+                            <div class="text-center">
+                                <h3>Wallet : <i class="fa-solid fa-wallet fa-2xl"></i></h3>
+                            </div>
+                            <div class="alert alert-success text-center m-3 p-3">
+                                <h4>current balance :</h4><span>₹
+                                </span><span>[[${wallets.currentBalance}]]</span>
+                            </div>
+                        
+                        
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Message</th>
+                                        <th scope="col">Amount transferred</th>
+                                        <th scope="col">DateTime</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="wallethistory,istart:${wallethistorys}">
+                                        <th scope="row">[[${istart.index+1}]]</th>
+                                        <td>[[${wallethistory.description}]]</td>
+                                        <td>[[${wallethistory.amountTransferred}]]</td>
+                                        <td>
+                                            <script th:inline="javascript">
+                                                /* Extracting the date string from Thymeleaf expression */
+                                                var orderDateTime = /*[[${wallethistory.transactionTime}]]*/ '';
+
+                                                /* Creating a JavaScript Date object from the string */
+                                                var date = new Date(orderDateTime);
+
+                                                /* Formatting the date to display only the date part */
+                                                var formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+
+                                                /* Setting the formatted date as the text content of the <td> element */
+                                                document.write(formattedDate);
+                                            </script>
+                                        </td>
+                                        <th:block th:if="${wallethistory.status}==${walletstatuses[1]}">
+                                            <td class="text-success">[[${wallethistory.status}]]</td>
+                                        </th:block>
+                                        <th:block th:if="${wallethistory.status}==${walletstatuses[0]}">
+                                            <td class="text-danger">[[${wallethistory.status}]]</td>
+                                        </th:block>
+                                        
+
+                                    </tr>
+                                   
+                                </tbody>
+                            </table>
+                        
+
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    </section>
+</body>
+</html>

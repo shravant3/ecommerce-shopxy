@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})" xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <style>
+      
+    </style>
+</head>
+<body>
+    <!-- <section class="vh-90 gradient-custom">
+        <div class="container-fluid" style="margin-top: 30px;">
+            <div class="container py-1 h-90">
+                <div class="row d-flex justify-content-center h-90">
+                    <div class="col-12 col-md-12 col-lg-11 col-xl-11">
+                    <div class="card bg-light text-dark" style="border-radius: 1rem;">
+                        <div class="card-body p-4">
+                        <div class="mb-md-4 mt-md-4">
+                            <div class="container-fluid">
+                                <h3>Add a new Product</h3>
+                                <form th:action="@{/seller/productmanagement/add}" method="post" th:object="${productDto}" enctype="multipart/form-data">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                            
+                                            <input type="hidden" name="id" th:field="*{id}">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input type="text" class="form-control" required th:field="*{name}" name="name" id="name"
+                                                    placeholder="Enter name">
+                            
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category">Select Category</label>
+                                                <select class="form-control" th:field="*{categoryid}" id="category" name="category">
+                                                    <option th:each="category :${categories}"
+                                                            th:value="${category.id}"
+                                                            th:text="${category.name}"
+                                                    >
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="price">Price</label>
+                                                <input type="number" class="form-control" required th:field="*{price}" name="price" id="price"
+                                                    placeholder="Price">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="quantity">Quantity</label>
+                                                <input type="number" class="form-control" required th:field="*{quantity}" name="quantity" id="quantity"
+                                                    placeholder="Quantity">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="weight">Weight in grams</label>
+                                                <input type="number" class="form-control" required th:field="*{weight}" name="weight" id="weight"
+                                                    placeholder="Weight">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="description">Product Description</label>
+                                                <textarea class="form-control" rows="5" th:field="*{description}" name="description" id="description"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <p>Product Image</p>
+                                            <div class="custom-file">
+                                                <input type="file"  class="custom-file-input" name="productImage" accept="image/jpeg, image/png"  id="productImage"/>
+                                                <label class="custom-file-label" for="productImage">Choose file</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <img src="#" id="imgPreview" height="100px" width="100px" th:src="@{${'/productImages/' + productDto.imagename}}" style="margin-top: 20px" alt=" ">
+                                            </div>
+                                            <input type="hidden" name="imgname" th:value="${productDto.imagename}">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </section> -->
+
+
+      <section class="vh-90 gradient-custom">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card bg-light text-dark" style="border-radius: 1rem;">
+                        <div class="card-body p-4">
+                            <div class="container-fluid">
+                                
+                                <h3 class="text-center mb-4">Add New Product</h3>
+                                <form th:action="@{/seller/creatproduct}" method="post" enctype="multipart/form-data">
+                                    <!-- <input type="hidden" name="id" th:field="*{id}"> -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            
+                                            <div class="form-group">
+                                                <label for="name">Product Name</label>
+                                                <input type="text" class="form-control" name="productname" id="name" placeholder="Enter the product name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category">Select Category</label>
+                                                <select id="category" name="procat" class="form-select"
+                                                    aria-label="Default select example" onchange="fetchSubcategories()">
+                                                    <option value="0" selected>select Category</option>
+                                                    <option th:each="category : ${category}" th:value="${category.catid}"
+                                                        th:text="${category.catname}"></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="price">Price (INR)</label>
+                                                <input type="number" class="form-control" required name="price" id="price" placeholder="Enter the price">
+                                            </div>
+                                            <!-- <div class="form-group">
+                                                <label for="quantity">Available Quantity</label>
+                                                <input type="number" class="form-control" required name="quantity" id="quantity" placeholder="Enter the quantity">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="weight">Weight (grams)</label>
+                                                <input type="number" class="form-control" required th:field="*{weight}" name="weight" id="weight" placeholder="Enter the weight">
+                                            </div> -->
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label for="description">Product Description</label>
+                                                <textarea class="form-control" rows="5" name="productdescription" id="description" placeholder="Enter a description"></textarea>
+                                            </div>
+                                            <input type="text" name="imgNames" id="imgNames" hidden />
+                                            <div class="form-group">
+                                                <div class="mb-3">
+                                                    <label for="formFile" class="form-label">Upload image</label>
+                                                    <input class="form-control" type="file" id="formFile" multiple="multiple"
+                                                        name="imagefile">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-center" style="margin-top: 20px;">
+                                        <a th:href="@{/seller/productmanagement}" style="color: rgb(255, 145, 0); font-weight: 500; font-size: 18px; text-decoration: none;">&#x2190; Back</a>
+                                        <button type="submit" class="btn btn-lg" style="background-color: rgb(255, 145, 0); font-weight: 600; color: white; margin-left: 70px;">Submit</button>
+                                    </div>
+                                </form>
+
+                                <div th:if="${session.message}" th:classappend="${session.message.type}" class="alert"
+                                role="alert">
+                                <p class="text-center" th:text="${session.message.content}"></p>
+                            </div>
+                            <th:block th:text="${@sessionHelper.removemessagefromservice()}"></th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+      
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.js"></script>
+</body>
+</html>

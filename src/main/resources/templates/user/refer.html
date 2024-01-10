@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <style>
+      
+    </style>
+</head>
+<body>
+    <section class="vh-90 gradient-custom">
+        <div class="container py-1 h-90">
+            <div class="row d-flex justify-content-center h-90">
+              <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                  <div class="card-body p-4 text-center">
+                    <div class="mb-md-4 mt-md-4 ">
+
+                        <div>
+                            <h2 class="">Refer and Earn</h2>
+                        </div>
+                        <div class="referbox">
+                            <th:block th:if="${referrals != null}">
+                                <input type="text" id="inputFieldId" th:value="${referrals.referalCode}" disabled>
+                                <button class="copy-button" onclick="copyText()">Copy</button>
+                            </th:block>
+                            <th:block th:if="${referrals == null}">
+                                <form th:action="@{/user/showReferal}" method="post">
+                                    <button type="submit" class="referral-button">Generate Referral</button>
+                                </form>
+                            </th:block>
+                        </div>
+                        <div class="referral-offer">
+                            <h4>📜 Terms and Conditions</h4>
+                            <p>🔆
+                                <strong>Referral Limit:</strong> A user can only refer to a maximum of 2 users.
+                            </p>
+                            <p>🔆
+                                <strong>Referral Offer:</strong> For every successful referral, both the
+                                referrer and the referred user will receive a referral offer of 100 credits to
+                                their wallet.
+                            </p>
+                            <p>🔆
+                                <strong>Offer Validity:</strong> This offer is valid for a certain period.
+                                Please check the validity period on the offer details page.
+                            </p>
+                            <p>🔆
+                                <strong>Usage:</strong> The referral offer credits can be used for future
+                                purchases or services.
+                            </p>
+                            <p>🔆
+                                <strong>Terms and Conditions:</strong> Please read and agree to our terms and
+                                conditions before using this offer.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.js"></script>
+</body>
+</html>

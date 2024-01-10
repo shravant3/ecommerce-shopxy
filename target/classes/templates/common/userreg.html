@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="base::layout(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        
+    </style>
+    
+
+</head>
+<body>
+    <section class="vh-90 gradient-custom">
+        <div class="container-fluid" style="margin-top: 30px;">
+            <div class="container py-1 h-90">
+                <div class="row d-flex justify-content-center h-90">
+                  <div class="col-12 col-md-12 col-lg-11 col-xl-11">
+                    <div class="card bg-light text-dark" style="border-radius: 1rem;">
+                      <div class="card-body p-4">
+                        <div class="mb-md-4 mt-md-4">
+                            
+                          <!-- <th:block th:if="${session.message}">
+                            <p class="text-center fs-3 text-success">[[${session.message}]]</p>
+                            <th:block th:text="${@sessionHelper.removeMessageFromSession()}"></th:block>
+                            </th:block> -->
+      
+                          <form th:action="@{/createUser}" method="post">
+                            <div class="row">
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="email" style="font-weight: 500;">Email</label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="name" style="font-weight: 500;">Name</label>
+                                        <input type="text" class="form-control" name="usename" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="phone" style="font-weight: 500;">Phone</label>
+                                        <input type="text" class="form-control" name="phonenumber" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="password" style="font-weight: 500;">Password</label>
+                                        <input type="password" class="form-control" name="password" id="phone_number_label"required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="password" style="font-weight: 500;">Confirm Password</label>
+                                        <input type="password" class="form-control" name="confirmpassword" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="role" style="font-weight: 500;">Admin Code (Optional)</label>
+                                        <input type="text" class="form-control" name="role" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 30px;">
+                                    <div class="form-group">
+                                        <label for="referralcode" style="font-weight: 500;">Referal Code (Optional)</label>
+                                        <input type="text" class="form-control" name="referralcode" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3 d-flex g-4 ml-5 justify-content-center align-items-center">
+                                <input name="agreement" class="form-check-input" type="checkbox" id="checkagrement"
+                                    value="true">
+                                <label class="form-check-label mx-3 fw-bold" for="checkagrement">
+                                    Accept Terms and Conditions
+                                </label>
+                            </div>
+
+                            
+                          <div class="d-flex justify-content-center align-items-center">
+                              <button class="btn col-md-3 mb-3" style="background-color: rgb(255, 145, 0); margin-top: 10px; font-weight: 600; color: white;">Register</button>
+                          </div>
+                          </form>
+                         <div style="float: right; width: 25%;">
+                            <p class="text-dark-50 mb-2 " style="font-weight: 500; display: inline-block;">Already have an account? <a th:href="@{/login}" style="text-decoration: none; color: rgb(255, 145, 0); font-size: 18px;">Login</a></p>
+                         </div>
+                         <div th:if="${session.message}" th:classappend="${session.message.type}" class="alert" role="alert">
+                            <p class="text-center" th:text="${session.message.content}"></p>
+                        </div>
+                          <th:block th:text="${@sessionHelper.removemessagefromservice()}"></th:block>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.js"></script>
+</body>
+</html>

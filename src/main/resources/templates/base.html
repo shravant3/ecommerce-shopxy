@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" th:fragment="layout(content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        .nav-link{
+            /* color: rgb(255, 167, 51) !important; */
+            font-size: 20px;
+        }
+        .navbar-brand{
+            font-size: 25px;
+            color: rgb(255, 145, 0) !important;
+        }
+
+        .nav-item:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu{
+            right: 20px;
+        }
+
+        .logout-button:hover{
+            color: red;
+        }
+
+        .navbar {
+   display: flex;
+   align-items: center;
+}
+
+.form-control {
+   width: 100%;
+   margin: 0 auto;
+   display: block;
+}
+
+@media (max-width: 600px) {
+   .form-control {
+       font-size: 0.8em;
+   }
+}
+
+
+        
+
+        /* .dropdown-item{
+            font-size: 14px;
+            font-weight: 500;
+        } */
+
+
+    </style>
+
+</head>
+<body class="bg-light">
+    
+    
+    <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary" >
+        <div class="container-fluid">
+            <th:block th:if="${user==NULL}">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand fw-bold" th:href="@{/}">
+                    <img th:src="@{/images/common/shopxyLogo.png}" alt="Logo" width="40" height="35" style="margin-left: 20px;" class="d-inline-block align-text-top">
+                    Shopxy.com
+                </a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fw-bold">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/sellerregistration}">Become a Seller</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/registration}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/signin}">Login</a>
+                    </li>
+                    </ul>
+                </div>
+            </th:block>
+            <th:block th:if="${user!=NULL}">
+                <th:block th:if="${user.role=='ROLE_USER'}">
+                <a class="navbar-brand fw-bold" th:href="@{/user/}">
+                <img th:src="@{/images/common/shopxyLogo.png}" alt="Logo" width="40" height="35" style="margin-left: 20px;" class="d-inline-block align-text-top">
+                Shopxy.com
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <form th:action="@{/user/search}" method="get" class="d-flex" style="max-width: 100%;" >
+                                <div class="input-group">
+                                    <input class="form-control me-5 bg-gradient" style="border-radius: 30px; background-color: #f2edf3;"
+                                        type="search" placeholder="Search" aria-label="Search" name="searchQuery">
+                                </div>
+                                <button class="btn" style="background-color: rgb(255, 145, 0); font-weight: 600; margin-right: 10px; color: white;"
+                                    type="submit">Search</button>
+                                <a class="btn" style="background-color: rgb(255, 145, 0); font-weight: 600; color: white;" href=""
+                                    th:href="@{/user/}">clear</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+    
+            
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-uppercase fw-bold">
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" aria-expanded="false">
+                            [[${user.usename}]]
+                        </a>
+                        <ul class="dropdown-menu">
+                          <div class="drop-container">
+                                <li><a href="" th:href="@{/user/userprofile}" class="dropdown-item">My Profile</a></li>
+                                <li><a th:href="@{/user/viewaddress}" class="dropdown-item">My Addresses</a></li>
+                                <li><a th:href="@{/user/orders}" class="dropdown-item">My Orders</a></li>
+                                <li><a th:href="@{/user/wallet}" class="dropdown-item">Wallet</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a th:href="@{/user/referEarn}" class="dropdown-item">Refer and Earn</a></li>
+                                <li>
+                                    <form th:action="@{/logout}" method="post" class="d-flex" role="search">
+                                        <a href="" th:href="@{/logout}" type="submit" class="dropdown-item logout-button">Logout</a>
+                                    </form>
+                                </li>
+                          </div>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/user/cartItems}">Cart</a>
+                    </li>
+                </div>
+                    
+                </th:block>
+
+                    <th:block th:if="${user.role=='ROLE_ADMIN'}">
+                        
+                    <a class="navbar-brand fw-bold" th:href="@{/admin/}">
+                        <img th:src="@{/images/common/shopxyLogo.png}" alt="Logo" width="40" height="35" class="d-inline-block align-text-top">
+                        Shopxy.com
+                    </a>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-uppercase fw-bold">
+                       
+                        <li class="nav-item">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                [[${user.usename}]]
+                            </a>
+                            <ul class="dropdown-menu">
+                              <div class="drop-container">
+                                    <li><a href="" th:href="@{/admin/userprofile}" class="dropdown-item">My Profile</a></li>
+                                    <li><a href="" th:href="@{/admin/categorymanagement}" class="dropdown-item">Category Management</a></li>
+                                    <li><a href="" th:href="@{/admin/usermanagement}" class="dropdown-item">Manage User</a></li>
+                                    <li><a href="" th:href="@{/admin/managecoupons}" class="dropdown-item">Manage Coupons</a></li>
+                                    <li><a href="" th:href="@{/admin/manageoffer}" class="dropdown-item">Manage Offers</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form th:action="@{/logout}" method="post" class="d-flex" role="search">
+                                            <a href="" th:href="@{/logout}" type="submit" class="dropdown-item logout-button">Logout</a>
+                                        </form>
+                                    </li>
+                              </div>
+                            </ul>
+                        </li>
+
+
+                        
+
+                        
+                        
+                        
+                        
+                    </th:block>
+
+                    <th:block th:if="${user.role=='ROLE_SELLER'}">
+                    <a class="navbar-brand fw-bold" th:href="@{/seller/}">
+                    <img th:src="@{/images/common/shopxyLogo.png}" alt="Logo" width="40" height="35" class="d-inline-block align-text-top">
+                    Shopxy.com
+                    </a>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-uppercase fw-bold">
+                        
+                        
+                        <li class="nav-item">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                [[${user.usename}]]
+                            </a>
+                            <ul class="dropdown-menu">
+                              <div class="drop-container">
+                                    <li><a href="" th:href="@{/seller/userprofile}" class="dropdown-item">My Profile</a></li>
+                                    <li><a class="dropdown-item" href="#" th:href="@{/seller/productmanagement}">Product Management</a></li>
+                                    <li><a class="dropdown-item" href="#" th:href="@{/seller/ordermanagement}">Order Management</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form th:action="@{/logout}" method="post" class="d-flex" role="search">
+                                            <a href="" th:href="@{/logout}" type="submit" class="dropdown-item logout-button">Logout</a>
+                                        </form>
+                                    </li>
+                              </div>
+                            </ul>
+                        </li>
+                    </th:block>
+
+                    <!-- <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" class="d-flex" role="search">
+                        <button class="btn fw-bold nav-link text-uppercase" type="submit">Sign Out</button>
+                    </form>
+                    </li> -->
+                </ul>
+            
+            </th:block>
+            
+                
+        </div>
+    </nav>
+
+
+
+    <!-- <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">Hidden brand</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+    </nav> -->
+
+
+    <div th:replace="${content}"></div>
+
+    <!-- <footer>
+        <div class="footer" style="background-color: black; color: white;">
+            <div class="container-fluid" >
+                <div class="row" >
+                    <div class="col-lg-3 col-md-6" style="margin-top: 30px; ">
+                        <div class="footer-widget">
+                            <h2>Get in Touch</h2>
+                            <div class="contact-info">
+                                <p><i class="fa fa-map-marker"></i>shopxy, Bengaluru, India</p>
+                                <p><i class="fa fa-envelope"></i>email@shopxy.com</p>
+                                <p><i class="fa fa-phone"></i>+123-456-7890</p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-6" style="margin-top: 30px;">
+                        <div class="footer-widget">
+                            <h2>Follow Us</h2>
+                            <div class="contact-info">
+                                <div class="social">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-6" style="margin-top: 30px;">
+                        <div class="footer-widget">
+                            <h2>Company Info</h2>
+                            <ul>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Terms & Condition</a></li>
+                            </ul>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-3 col-md-6" style="margin-top: 30px;">
+                        <div class="footer-widget">
+                            <h2>Purchase Info</h2>
+                            <ul>
+                                <li><a href="#">Pyament Policy</a></li>
+                                <li><a href="#">Shipping Policy</a></li>
+                                <li><a href="#">Return Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row payment align-items-center" style="margin-top: 20px;">
+                    <div class="col-md-6">
+                        <div class="payment-method">
+                            <h2 style="display: inline; font-size: 22px; float:right;">We Accept:</h2>
+                            <img src="" th:src="@{/img/payment-method.png}" alt="Payment Method" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="payment-security">
+                            <h2>Secured By:</h2>
+                            <img src="" th:src="@{/img/godaddy.svg}" alt="Payment Security" />
+                            <img src="" th:src="@{/img/norton.svg}" alt="Payment Security" />
+                            <img src="" th:src="@{/img/ssl.svg}" alt="Payment Security" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer> -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
