@@ -6,6 +6,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -40,10 +41,22 @@ import com.shopxy.ecom.service.ProductService;
 import com.shopxy.ecom.service.UserDtlsService;
 
 import jakarta.servlet.http.HttpSession;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Controller
 @RequestMapping("/seller")
 public class SellerController {
+
+    @Value("${aws.s3.bucketName}")
+    private String bucketName;
+
+    private final S3Client s3Client;
+
+    public SellerController(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
 
     @Autowired
     private ProductService proserv;
@@ -138,21 +151,29 @@ public class SellerController {
                 // Product product = proserv.convertProductDtoProduct(products);
                 product.setCategory(catservice.getcategoryByid(catid));
 
-                List<String> imagepaths = new ArrayList<>();
+                List<String> imagePaths = new ArrayList<>();
 
                 for (MultipartFile file : files) {
                     if (file.isEmpty()) {
                         throw new MycustomException("one or more files is empty");
                     }
 
-                    String imagepath = file.getOriginalFilename();
-                    imagepaths.add(imagepath);
+                    // String imagepath = file.getOriginalFilename();
+                    // imagepaths.add(imagepath);
 
-                    File filestore = new ClassPathResource("static/img/").getFile();
-                    Path path = Paths.get(filestore.getAbsolutePath() + File.separator + imagepath);
-                    Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                    // File filestore = new ClassPathResource("static/img/").getFile();
+                    // Path path = Paths.get(filestore.getAbsolutePath() + File.separator + imagepath);
+                    // Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                    
+                    String imageName = file.getOriginalFilename();
+                    s3Client.putObject(PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(imageName)
+                        .build(), RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+                imagePaths.add(imageName);
                 }
-                product.setImagepath(imagepaths);
+                product.setImagepath(imagePaths);
                 proserv.createproduct(product);
                 session.setAttribute("message", new Message("product added successfully", "alert-success"));
             }
